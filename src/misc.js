@@ -8,9 +8,30 @@ export function zipSort(mainList, secondaryList, sortBy, extra = {}) {
   console.log(zipped);
 
   // Sort the zipped array
+  // zipped.sort((a, b) => {
+  //   if (sortBy === "asc") return a[0].name.localeCompare(b[0].name);
+  //   else return b[0].name.localeCompare(a[0].name);
+  // });
+
+  // ****************************** 1st Bug *******************************
   zipped.sort((a, b) => {
-    if (sortBy === "asc") return a[0].name.localeCompare(b[0].name);
-    else return b[0].name.localeCompare(a[0].name);
+    if (sortBy === "asc") {
+      // Sort by name in ascending order
+      if (a[0].name !== b[0].name) {
+        return a[0].name.localeCompare(b[0].name);
+      } else {
+        // If names are equal, sort by score in ascending order
+        return a[1] - b[1];
+      }
+    } else {
+      // Sort by name in descending order
+      if (a[0].name !== b[0].name) {
+        return b[0].name.localeCompare(a[0].name);
+      } else {
+        // If names are equal, sort by score in descending order
+        return b[1] - a[1];
+      }
+    }
   });
 
   // Unzip the sorted array back into two separate arrays
@@ -61,7 +82,6 @@ export function binarySearch(name, sortBy, people) {
         low = mid + 1;
       }
     } else {
-      // if (name.localeCompare(people[mid].name) >= 1) {
       if (name.localeCompare(people[mid].name) === 1) {
         index = mid;
         high = mid - 1;

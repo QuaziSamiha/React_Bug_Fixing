@@ -15,6 +15,10 @@ const Person = memo(function ({
 }) {
   const renderedRef = useRef();
   const [internalScore, setInternalScore] = useState(score);
+  // modified by me
+  useEffect(() => {
+    setInternalScore(score); // Update internalScore when score changes
+  }, [score]);
 
   useEffect(() => {
     renderedRef.current.style.transition = "none";
@@ -24,6 +28,7 @@ const Person = memo(function ({
       renderedRef.current.style.opacity = 0;
     }, 500);
   });
+  // }, [score]);
 
   return (
     <div style={style}>
@@ -40,8 +45,8 @@ const Person = memo(function ({
 });
 
 export default function App() {
-  const containerRef = useRef(null);
-  const [containerWidth, setContainerWidth] = useState(null);
+  const containerRef = useRef(null); // to reference the container element in the JSX
+  const [containerWidth, setContainerWidth] = useState(null); // to store the width of the container
   const addPersonInputRef = useRef(null);
   const [sortBy, setSortBy] = useState("asc");
   const [people, setPeople] = useState([
@@ -67,11 +72,14 @@ export default function App() {
 
     // feat: re-sort the list after adding the new person.
     const index = binarySearch(name, sortBy, people);
+    // console.log(index);
     const newPeople = people.slice();
     const newScore = scores.slice();
 
     newPeople.splice(index, 0, { name });
-    newScore.splice(index, 0, 0);
+    // modified
+    // newScore.splice(index, 0, 0);
+    newScore.splice(index, 0, index);
     setPeople(newPeople);
     setScores(newScore);
 
@@ -108,13 +116,36 @@ export default function App() {
     setScores(sortedScores);
   }, [sortBy]);
 
+  // ************************************************ Bug 4 Fixed  *****************************************************
+  /*
+  Callback function for ResizeObserver
+  it receives entries from the ResizeObserver and updates the containerWidth state with the width of the observed element.
+  */
+  const resizeObserverCallback = useCallback((entries) => {
+    if (entries && entries.length > 0) {
+      const { width } = entries[0].contentRect;
+      setContainerWidth(width);
+    }
+  }, []);
+
+  useEffect(() => { // this useEffect hook runs when the component mounts.
+    const resizeObserver = new ResizeObserver(resizeObserverCallback); // ResizeObserver instance with the resizeObserverCallback
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current); // ResizeObserver instance observes the container element referenced by containerRef
+    }
+    return () => {
+      resizeObserver.disconnect(); // When the component unmounts, it disconnects the ResizeObserver.
+    };
+  }, [resizeObserverCallback]);
+
+  // Calculating container width and style
   const currentContainerWidth =
     containerWidth ?? (containerRef.current?.clientWidth || 0);
 
   const isSmallContainer = currentContainerWidth < 450;
   const style = useMemo(
     () => getStyle(currentContainerWidth),
-    [isSmallContainer]
+    [isSmallContainer, currentContainerWidth]
   );
 
   return (
@@ -152,7 +183,7 @@ export default function App() {
 
 // DETAILED EXPLANATION
 
-// Bug 1: Sorting doesn't work. When clicking on the "Sort" button, names are sorted correctly, 
+// Bug 1: Sorting doesn't work. When clicking on the "Sort" button, names are sorted correctly,
 // but scores are not. Implement sorting for scores.
 
 // Bug 2: Add name doesn't work. If I type a new person's name and click "Add person", it's added to the list with empty name.
@@ -161,4 +192,5 @@ export default function App() {
 
 // Bug 4: Layout is kinda responsive, it's wider when it's > 450px, and narrow when < 450px. But it doesn't change on window resize, until something is rendered on the page
 
-// Bug 5: Person component is memoized, but every time anything is changed on the page, it's rerendered (though it should not, unless its props have changed)
+// Bug 5: Person component is memoized, but every time anything is changed on the page, it's rerendered
+// (though it should not, unless its props have changed)

@@ -16,9 +16,9 @@ const Person = memo(function ({
   const renderedRef = useRef();
   const [internalScore, setInternalScore] = useState(score);
   // modified by me
-  useEffect(() => {
-    setInternalScore(score); // Update internalScore when score changes
-  }, [score]);
+  // useEffect(() => {
+  //   setInternalScore(score); // Update internalScore when score changes
+  // }, [score]);
 
   useEffect(() => {
     renderedRef.current.style.transition = "none";
@@ -27,9 +27,10 @@ const Person = memo(function ({
       renderedRef.current.style.transition = "opacity .75s linear";
       renderedRef.current.style.opacity = 0;
     }, 500);
-  });
-  // }, [score]);
-
+  }, [score]); // ******************************* Bug 5 Fixed **********************************
+  /* The useEffect hook is missing its dependency array, causing it to run on every render. To fix this, 
+   dependencies 'score' added to the useEffect hook so that it only runs when necessary.
+   */
   return (
     <div style={style}>
       {name}: {internalScore}{" "}
@@ -116,7 +117,7 @@ export default function App() {
     setScores(sortedScores);
   }, [sortBy]);
 
-  // ************************************************ Bug 4 Fixed  *****************************************************
+  // ************************************************ Bug 4 Fixed *****************************************************
   /*
   Callback function for ResizeObserver
   it receives entries from the ResizeObserver and updates the containerWidth state with the width of the observed element.
@@ -128,7 +129,8 @@ export default function App() {
     }
   }, []);
 
-  useEffect(() => { // this useEffect hook runs when the component mounts.
+  useEffect(() => {
+    // this useEffect hook runs when the component mounts.
     const resizeObserver = new ResizeObserver(resizeObserverCallback); // ResizeObserver instance with the resizeObserverCallback
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current); // ResizeObserver instance observes the container element referenced by containerRef

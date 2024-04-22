@@ -1,5 +1,11 @@
+// this function returns sortedPeople and sortedScores
+//  it takes people, scores, sortBy (asc or desc) as arguments
 export function zipSort(mainList, secondaryList, sortBy, extra = {}) {
+  // mainList --> people
+  // secondaryList --> score
+  console.log(mainList);
   let zipped = mainList.map((e, i) => [e, secondaryList[i]]);
+  console.log(zipped);
 
   // Sort the zipped array
   zipped.sort((a, b) => {
@@ -24,7 +30,7 @@ export function getStyle(width) {
     width: "400px",
     justifyContent: "space-between",
     alignItems: "center",
-    margin: "6px 0"
+    margin: "6px 0",
   };
 
   const flexStyleSmall = {
@@ -32,7 +38,7 @@ export function getStyle(width) {
     width: "250px",
     justifyContent: "space-between",
     alignItems: "center",
-    margin: "3px 0"
+    margin: "3px 0",
   };
 
   if (width < 450) return flexStyleSmall;
@@ -55,6 +61,7 @@ export function binarySearch(name, sortBy, people) {
         low = mid + 1;
       }
     } else {
+      // if (name.localeCompare(people[mid].name) >= 1) {
       if (name.localeCompare(people[mid].name) === 1) {
         index = mid;
         high = mid - 1;

@@ -57,12 +57,14 @@ export default function App() {
   );
 
   const addPerson = () => {
-    // ******************************* Bug 1 Fixed ***************************************
+    // ******************************* Bug 2 Fixed ***************************************
     /* Bug: name value was undefined. here extracting the name value from the input field referenced 
     by addPersonInputRef. so to get the value of the input field, need to access the current property 
-    of the addPersonInputRef object*/
+    of the addPersonInputRef object
+    */
     // Get the current value of the input field
     const name = addPersonInputRef.current.value;
+
     // feat: re-sort the list after adding the new person.
     const index = binarySearch(name, sortBy, people);
     const newPeople = people.slice();
@@ -86,6 +88,7 @@ export default function App() {
       ...prev.slice(index + 1, Infinity),
     ]);
   }, []);
+
   const increaseScoreByIndex = useCallback(
     (index) => {
       const newScores = [...scores];
@@ -149,7 +152,8 @@ export default function App() {
 
 // DETAILED EXPLANATION
 
-// Bug 1: Sorting doesn't work. When clicking on the "Sort" button, names are sorted correctly, but scores are not. Implement sorting for scores.
+// Bug 1: Sorting doesn't work. When clicking on the "Sort" button, names are sorted correctly, 
+// but scores are not. Implement sorting for scores.
 
 // Bug 2: Add name doesn't work. If I type a new person's name and click "Add person", it's added to the list with empty name.
 

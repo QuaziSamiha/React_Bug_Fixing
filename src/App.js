@@ -16,9 +16,9 @@ const Person = memo(function ({
   const renderedRef = useRef();
   const [internalScore, setInternalScore] = useState(score);
   // modified by me
-  // useEffect(() => {
-  //   setInternalScore(score); // Update internalScore when score changes
-  // }, [score]);
+  useEffect(() => {
+    setInternalScore(score); // Update internalScore when score changes
+  }, [score]);
 
   useEffect(() => {
     renderedRef.current.style.transition = "none";
@@ -68,8 +68,7 @@ export default function App() {
     by addPersonInputRef. so to get the value of the input field, need to access the current property 
     of the addPersonInputRef object
     */
-    // Get the current value of the input field
-    const name = addPersonInputRef.current.value;
+    const name = addPersonInputRef.current.value; // Get the current value of the input field
 
     // feat: re-sort the list after adding the new person.
     const index = binarySearch(name, sortBy, people);
@@ -78,9 +77,7 @@ export default function App() {
     const newScore = scores.slice();
 
     newPeople.splice(index, 0, { name });
-    // modified
-    // newScore.splice(index, 0, 0);
-    newScore.splice(index, 0, index);
+    newScore.splice(index, 0, 0);
     setPeople(newPeople);
     setScores(newScore);
 
@@ -115,7 +112,8 @@ export default function App() {
     const [sortedPeople, sortedScores] = zipSort(people, scores, sortBy);
     setPeople(sortedPeople);
     setScores(sortedScores);
-  }, [sortBy]);
+  }, [sortBy]); 
+  // }, [scores]);  // modified for Bug 1
 
   // ************************************************ Bug 4 Fixed *****************************************************
   /*

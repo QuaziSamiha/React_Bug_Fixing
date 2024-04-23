@@ -3,9 +3,9 @@
 export function zipSort(mainList, secondaryList, sortBy, extra = {}) {
   // mainList --> people
   // secondaryList --> score
-  console.log(mainList);
+  // console.log(mainList);
   let zipped = mainList.map((e, i) => [e, secondaryList[i]]);
-  console.log(zipped);
+  // console.log(zipped);
 
   // Sort the zipped array
   // zipped.sort((a, b) => {

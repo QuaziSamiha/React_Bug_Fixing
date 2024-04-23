@@ -13,7 +13,8 @@ export function zipSort(mainList, secondaryList, sortBy, extra = {}) {
   //   else return b[0].name.localeCompare(a[0].name);
   // });
 
-  // ****************************** 1st Bug *******************************
+  // ****************************** 1st Bug Fixed *******************************
+  // sorting apply both for name and score
   zipped.sort((a, b) => {
     if (sortBy === "asc") {
       // Sort by name in ascending order
